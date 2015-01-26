@@ -115,16 +115,30 @@ class BuildEnvironment():
         # than leaving it up to individual morphologies.
         if arch == 'x86_32':
             cpu = 'i686'
+            abi = ''
+        elif arch.startswith('armv7'):
+            cpu = arch
+            abi = 'eabi'
         elif arch == 'armv8l64':  # pragma: no cover
             cpu = 'aarch64'
+            abi = ''
         elif arch == 'armv8b64':  # pragma: no cover
             cpu = 'aarch64_be'
+            abi = ''
+        elif arch == 'mips64b':   # pragma: no cover
+            cpu = 'mips64'
+            abi = 'abi64'
+        elif arch == 'mips64l':   # pragma: no cover
+            cpu = 'mips64el'
+            abi = 'abi64'
+        elif arch == 'mips32b':   # pragma: no cover
+            cpu = 'mips'
+            abi = ''
+        elif arch == 'mips32l':   # pragma: no cover
+            cpu == 'mipsel'
+            abi = ''
         else:
             cpu = arch
-
-        if arch.startswith('armv7'):
-            abi = 'eabi'
-        else:
             abi = ''
 
         env['TARGET'] = cpu + '-baserock-linux-gnu' + abi
