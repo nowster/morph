@@ -20,6 +20,7 @@ import pipes
 import re
 import subprocess
 import textwrap
+import sys
 
 import fs.osfs
 
@@ -451,6 +452,13 @@ def has_hardware_fp(): # pragma: no cover
     output = subprocess.check_output(['readelf', '-A', '/proc/self/exe'])
     return 'Tag_ABI_VFP_args: VFP registers' in output
 
+def determine_endianness(): # pragma: no cover
+    '''
+    This function returns whether the host is running
+    in big or little endian. This is needed for MIPS.
+    '''
+
+    return sys.byteorder
 
 def get_host_architecture(): # pragma: no cover
     '''Get the canonical Morph name for the host's architecture.'''
@@ -469,6 +477,8 @@ def get_host_architecture(): # pragma: no cover
         'armv8b': 'armv8b',
         'aarch64': 'armv8l64',
         'aarch64b': 'armv8b64',
+        'mips': 'mips32',
+        'mips64': 'mips64',
         'ppc64': 'ppc64'
     }
 
@@ -477,6 +487,11 @@ def get_host_architecture(): # pragma: no cover
 
     if machine == 'armv7l' and has_hardware_fp():
         return 'armv7lhf'
+    elif machine in ('mips', 'mips64'):
+        if determine_endianness() == 'big':
+            return table[machine]+'b'
+        else:
+            return table[machine]+'l'
 
     return table[machine]
 
