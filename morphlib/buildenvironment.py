@@ -135,7 +135,7 @@ class BuildEnvironment():
             cpu = 'mips'
             abi = ''
         elif arch == 'mips32l':   # pragma: no cover
-            cpu == 'mipsel'
+            cpu = 'mipsel'
             abi = ''
         else:
             cpu = arch
